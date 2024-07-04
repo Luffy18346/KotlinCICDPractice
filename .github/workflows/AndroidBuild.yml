@@ -23,11 +23,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-#      - name: Run unit tests
-#        run: ./gradlew test
-#
-#      - name: Run lint
-#        run: ./gradlew ktlintFormat detekt ktlintCheck
+      - name: Run unit tests
+        run: ./gradlew test
+
+      - name: Run lint
+        run: ./gradlew ktlintFormat detekt ktlintCheck
 
 #      - name: SonarQube Scan
 #        env:
