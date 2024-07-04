@@ -20,14 +20,14 @@ jobs:
           java-version: '18'
           cache: gradle
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Run lint
+        run: ./gradlew ktlintFormat detekt ktlintCheck
 
       - name: Run unit tests
         run: ./gradlew test
 
-      - name: Run lint
-        run: ./gradlew ktlintFormat detekt ktlintCheck
+      - name: Build with Gradle
+        run: ./gradlew build
 
 #      - name: SonarQube Scan
 #        env:
