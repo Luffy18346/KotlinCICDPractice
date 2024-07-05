@@ -20,8 +20,18 @@ jobs:
           java-version: '18'
           cache: gradle
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+            api-level: 30
+            build-tools: 30.0.3
+
+      - name: Create local.properties
+        run: echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
+
       - name: Run lint
         run: ./gradlew ktlintFormat lint detekt ktlintCheck
+
 
 #      - name: Run unit tests, jacoco
 #        run: ./gradlew test jacocoTestReport
@@ -33,7 +43,7 @@ jobs:
           SONAR_PROJECT_KEY: KotlinCICDPractice
           SONAR_ORGANIZATION: KotlinCICDPractice
           SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube -Dsonar.host.url=http://localhost:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb
+        run: ./gradlew sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb
 
 #      - name: Build with Gradle
 #        run: ./gradlew build
