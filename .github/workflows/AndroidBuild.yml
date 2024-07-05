@@ -51,13 +51,7 @@ jobs:
 #        run: ./gradlew test jacocoTestReport
 
       - name: SonarQube Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: http://localhost:9000
-          SONAR_PROJECT_KEY: KotlinCICDPractice
-          SONAR_ORGANIZATION: KotlinCICDPractice
-          SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar
+        run: ./gradlew sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb
 
 #      - name: Build with Gradle
 #        run: ./gradlew build
