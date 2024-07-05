@@ -25,9 +25,9 @@ jobs:
 
       - name: Run unit tests, jacoco
         run: ./gradlew test jacocoTestReport
-#
-#      - name: SonarQube Scan
-#        run: ./gradlew sonar
+
+      - name: SonarQube Scan
+        run: ./gradlew sonar
 
       - name: Build with Gradle
         run: ./gradlew build
