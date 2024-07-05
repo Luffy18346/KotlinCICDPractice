@@ -44,11 +44,11 @@ jobs:
 #            done
 #            echo "SonarQube is up and running"
             
-#      - name: Run lint
-#        run: ./gradlew ktlintFormat lint detekt ktlintCheck
+      - name: Run lint
+        run: ./gradlew ktlintFormat lint detekt ktlintCheck
 
-#      - name: Run unit tests, jacoco
-#        run: ./gradlew test jacocoTestReport
+      - name: Run unit tests, jacoco
+        run: ./gradlew test jacocoTestReport
 
       - name: SonarQube Scan
         run: ./gradlew sonar -Dsonar.host.url=https://e77d-103-240-204-84.ngrok-free.app -Dsonar.login=admin -Dsonar.password=admin --stacktrace
