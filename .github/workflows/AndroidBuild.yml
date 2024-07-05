@@ -33,7 +33,7 @@ jobs:
           SONAR_PROJECT_KEY: KotlinCICDPractice
           SONAR_ORGANIZATION: KotlinCICDPractice
           SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube
+        run: ./gradlew sonar
 
       - name: Build with Gradle
         run: ./gradlew build
