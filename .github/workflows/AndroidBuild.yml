@@ -34,7 +34,7 @@ jobs:
 
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
-
+#
 #      - name: Wait for SonarQube to be up
 #        run: |
 #            echo "Waiting for SonarQube to start..."
@@ -51,7 +51,7 @@ jobs:
 #        run: ./gradlew test jacocoTestReport
 
       - name: SonarQube Scan
-        run: ./gradlew sonar -Dsonar.host.url=http://172.17.0.2:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb --stacktrace
+        run: ./gradlew sonar -Dsonar.host.url=https://e77d-103-240-204-84.ngrok-free.app -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb --stacktrace
 
 #      - name: Build with Gradle
 #        run: ./gradlew build

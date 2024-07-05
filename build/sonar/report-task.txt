@@ -2,5 +2,5 @@ projectKey=KotlinCICDPractice
 serverUrl=http://localhost:9000
 serverVersion=7.5.0.20543
 dashboardUrl=http://localhost:9000/dashboard?id=KotlinCICDPractice
-ceTaskId=AZCDIpexFCGOgCvk-BsT
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AZCDIpexFCGOgCvk-BsT
+ceTaskId=AZCDOuA6FCGOgCvk-BsV
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AZCDOuA6FCGOgCvk-BsV
