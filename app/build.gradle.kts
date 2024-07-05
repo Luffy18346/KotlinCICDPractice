@@ -124,7 +124,7 @@ sonarqube {
         property("sonar.projectKey", "KotlinCICDPractice")
         property("sonar.organization", "KotlinCICDPractice")
         property("sonar.host.url", "http://localhost:9000")
-        property("sonar.login", "318109bb61c534e7a847069ad286b3845dd5b0fb")
+//        property("sonar.login", "318109bb61c534e7a847069ad286b3845dd5b0fb")
 
         property("sonar.sources", "src/main/java")
         property("sonar.sourceEncoding", "UTF-8")
