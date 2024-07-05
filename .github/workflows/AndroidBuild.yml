@@ -9,6 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      sonarqube:
+        image: sonarqube:community
+        ports:
+          - 9000:9000
+        options: --health-cmd="curl -f http://localhost:9000 || exit 1" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,25 +35,29 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
 
+      - name: Wait for SonarQube to be up
+        run: |
+            echo "Waiting for SonarQube to start..."
+            until $(curl --output /dev/null --silent --head --fail http://localhost:9000); do
+              printf '.'
+              sleep 5
+            done
+            echo "SonarQube is up and running"
+            
       - name: Run lint
         run: ./gradlew ktlintFormat lint detekt ktlintCheck
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
 #      - name: Run unit tests, jacoco
 #        run: ./gradlew test jacocoTestReport
-#
-#      - name: SonarQube Scan
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#          SONAR_HOST_URL: http://localhost:9000
-#          SONAR_PROJECT_KEY: KotlinCICDPractice
-#          SONAR_ORGANIZATION: KotlinCICDPractice
-#          SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
-#        run: ./gradlew sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb
+
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: http://localhost:9000
+          SONAR_PROJECT_KEY: KotlinCICDPractice
+          SONAR_ORGANIZATION: KotlinCICDPractice
+          SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb
 
 #      - name: Build with Gradle
 #        run: ./gradlew build
