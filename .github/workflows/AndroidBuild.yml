@@ -51,7 +51,7 @@ jobs:
 #        run: ./gradlew test jacocoTestReport
 
       - name: SonarQube Scan
-        run: ./gradlew sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb --stacktrace --debug
+        run: ./gradlew sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb --stacktrace
 
 #      - name: Build with Gradle
 #        run: ./gradlew build
