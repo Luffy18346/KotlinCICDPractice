@@ -9,12 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-#    services:
-#      sonarqube:
-#        image: sonarqube:community
-#        ports:
-#          - 9000:9000
-#        options: --health-cmd="curl -f http://localhost:9000 || exit 1" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,16 +28,7 @@ jobs:
 
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
-#
-#      - name: Wait for SonarQube to be up
-#        run: |
-#            echo "Waiting for SonarQube to start..."
-#            until $(curl --output /dev/null --silent --head --fail http://localhost:9000); do
-#              printf '.'
-#              sleep 5
-#            done
-#            echo "SonarQube is up and running"
-            
+
       - name: Run lint
         run: ./gradlew ktlintFormat lint detekt ktlintCheck
 
@@ -53,12 +38,11 @@ jobs:
       - name: SonarQube Scan
         run: ./gradlew sonar -Dsonar.host.url=https://e77d-103-240-204-84.ngrok-free.app -Dsonar.login=admin -Dsonar.password=admin --stacktrace
 
-#      - name: Build with Gradle
-#        run: ./gradlew build
+      - name: Build with Gradle
+        run: ./gradlew build
 
-#      - name: Upload a Build Artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: KotlinCICD.apk
-#          path: app/build/outputs/apk/debug/app-debug.apk
-
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KotlinCICD.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
