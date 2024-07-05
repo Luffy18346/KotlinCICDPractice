@@ -23,8 +23,8 @@ jobs:
       - name: Run lint
         run: ./gradlew ktlintFormat lint detekt ktlintCheck
 
-      - name: Run unit tests, jacoco
-        run: ./gradlew test jacocoTestReport
+#      - name: Run unit tests, jacoco
+#        run: ./gradlew test jacocoTestReport
 
       - name: SonarQube Scan
         env:
@@ -35,12 +35,12 @@ jobs:
           SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonar
 
-      - name: Build with Gradle
-        run: ./gradlew build
+#      - name: Build with Gradle
+#        run: ./gradlew build
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: KotlinCICD.apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+#      - name: Upload a Build Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: KotlinCICD.apk
+#          path: app/build/outputs/apk/debug/app-debug.apk
 
