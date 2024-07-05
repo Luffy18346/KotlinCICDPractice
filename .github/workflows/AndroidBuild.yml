@@ -57,7 +57,7 @@ jobs:
           SONAR_PROJECT_KEY: KotlinCICDPractice
           SONAR_ORGANIZATION: KotlinCICDPractice
           SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=318109bb61c534e7a847069ad286b3845dd5b0fb
+        run: ./gradlew sonar
 
 #      - name: Build with Gradle
 #        run: ./gradlew build
