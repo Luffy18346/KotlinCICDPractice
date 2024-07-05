@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("org.jlleitschuh.gradle.ktlint")
     id("io.gitlab.arturbosch.detekt")
+    id("org.sonarqube")
+    id("jacoco")
 }
 
 android {
@@ -26,6 +28,8 @@ android {
 
     buildTypes {
         release {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -50,6 +54,9 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    testOptions.unitTests {
+        isReturnDefaultValues = true
     }
 }
 
@@ -106,4 +113,92 @@ afterEvaluate {
     tasks.named("assemble") {
         dependsOn("makeGradlewExecutable", "installGitHooks")
     }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "KotlinCICDPractice")
+        property("sonar.organization", "KotlinCICDPractice")
+        property("sonar.host.url", "http://localhost:9000")
+        property("sonar.login", "318109bb61c534e7a847069ad286b3845dd5b0fb")
+
+        property("sonar.sources", "src/main/java")
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.tests", "src/test/java")
+//        property("sonar.test.inclusions", "**/*Test*/**")
+//        property(
+//            "sonar.exclusions",
+//            "**/*Test*/**," +
+//                "*.json," +
+//                "**/*test*/**," +
+//                "**/.gradle/**," +
+//                "**/R.class",
+//        )
+
+        property("sonar.android.lint.reportPaths", "build/reports/lint-results.xml")
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.junit.reportPaths", "build/test-results/testDebugUnitTest")
+        property("sonar.jacoco.reportPaths", "**/jacoco/*.exec")
+//        property("sonar.jacoco.reportPaths", "build/jacoco/testDebugUnitTest.exec")
+//        property("sonar.jacoco.reportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
+        property(
+            "sonar.kotlin.ktlint.reportPaths",
+            "build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.xml"
+        )
+    }
+}
+
+tasks.withType<Test> {
+    useJUnit()
+    finalizedBy(tasks.named("jacocoTestReport"))
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = arrayListOf("jdk.internal.*")       //This line
+    }
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.outputLocation.set(file("build/reports/jacoco"))
+    }
+
+    val fileFilter =
+        listOf(
+            "**/R.class",
+            "**/R$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*Test*.*",
+            "android/**/*.*",
+        )
+
+    val debugTree =
+        fileTree("${layout.buildDirectory}/intermediates/classes/debug") {
+            exclude(fileFilter)
+        }
+    val kotlinDebugTree =
+        fileTree("${layout.buildDirectory}/tmp/kotlin-classes/debug") {
+            exclude(fileFilter)
+        }
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree, kotlinDebugTree))
+    executionData.setFrom(
+        fileTree(layout.buildDirectory) {
+            include(
+                "jacoco/testDebugUnitTest.exec",
+                "outputs/code-coverage/connected/*coverage.ec",
+            )
+        },
+    )
 }

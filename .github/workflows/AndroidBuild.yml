@@ -21,18 +21,16 @@ jobs:
           cache: gradle
 
       - name: Run lint
-        run: ./gradlew ktlintFormat detekt ktlintCheck
+        run: ./gradlew ktlintFormat lint detekt ktlintCheck
 
-      - name: Run unit tests
-        run: ./gradlew test
+      - name: Run unit tests, jacoco
+        run: ./gradlew test jacocoTestReport
 
       - name: Build with Gradle
         run: ./gradlew build
 
-#      - name: SonarQube Scan
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      - name: SonarQube Scan
+        run: ./gradlew sonar
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
