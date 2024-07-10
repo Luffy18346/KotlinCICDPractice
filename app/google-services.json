@@ -23,6 +23,101 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505317054648:android:7c69c54fde461ac836bc4d",
+        "android_client_info": {
+          "package_name": "com.example.kotlincicdpractice.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZQxJVAR85-ul6JKwJ7VRRQcR7gbkg7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505317054648:android:2d3aca2bd9f184a736bc4d",
+        "android_client_info": {
+          "package_name": "com.example.kotlincicdpractice.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZQxJVAR85-ul6JKwJ7VRRQcR7gbkg7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505317054648:android:61dee79f03a536bd36bc4d",
+        "android_client_info": {
+          "package_name": "com.example.kotlincicdpractice.dev.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZQxJVAR85-ul6JKwJ7VRRQcR7gbkg7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505317054648:android:c3a258d81e36eafe36bc4d",
+        "android_client_info": {
+          "package_name": "com.example.kotlincicdpractice.staging"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZQxJVAR85-ul6JKwJ7VRRQcR7gbkg7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505317054648:android:24032cb3b4e336e636bc4d",
+        "android_client_info": {
+          "package_name": "com.example.kotlincicdpractice.staging.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZQxJVAR85-ul6JKwJ7VRRQcR7gbkg7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

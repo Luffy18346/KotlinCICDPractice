@@ -28,6 +28,10 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+        }
         release {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
@@ -37,7 +41,22 @@ android {
                 "proguard-rules.pro",
             )
         }
+        create("beta") {
+            initWith(getByName("release"))
+            isDebuggable = true
+        }
     }
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            applicationIdSuffix = ".dev"
+        }
+        create("staging") {
+            applicationIdSuffix = ".staging"
+        }
+        create("production") {}
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -59,29 +78,6 @@ android {
     testOptions.unitTests {
         isReturnDefaultValues = true
     }
-}
-
-dependencies {
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 ktlint {
@@ -137,11 +133,7 @@ sonarqube {
         property("sonar.test.inclusions", "**/*Test*/**")
         property(
             "sonar.exclusions",
-            "**/*Test*/**," +
-                "*.json," +
-                "**/*test*/**," +
-                "**/.gradle/**," +
-                "**/R.class",
+            "**/*Test*/**," + "*.json," + "**/*test*/**," + "**/.gradle/**," + "**/R.class",
         )
 
         property("sonar.android.lint.reportPaths", "build/reports/lint-results.xml")
@@ -175,24 +167,21 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         html.outputLocation.set(file("build/reports/jacoco"))
     }
 
-    val fileFilter =
-        listOf(
-            "**/R.class",
-            "**/R$*.class",
-            "**/BuildConfig.*",
-            "**/Manifest*.*",
-            "**/*Test*.*",
-            "android/**/*.*",
-        )
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+    )
 
-    val debugTree =
-        fileTree("${layout.buildDirectory}/intermediates/classes/debug") {
-            exclude(fileFilter)
-        }
-    val kotlinDebugTree =
-        fileTree("${layout.buildDirectory}/tmp/kotlin-classes/debug") {
-            exclude(fileFilter)
-        }
+    val debugTree = fileTree("${layout.buildDirectory}/intermediates/classes/debug") {
+        exclude(fileFilter)
+    }
+    val kotlinDebugTree = fileTree("${layout.buildDirectory}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
     val mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories.setFrom(files(mainSrc))
@@ -205,4 +194,27 @@ tasks.register<JacocoReport>("jacocoTestReport") {
             )
         },
     )
+}
+
+dependencies {
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

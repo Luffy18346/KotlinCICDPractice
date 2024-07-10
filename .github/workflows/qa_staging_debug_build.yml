@@ -1,0 +1,74 @@
+name: AndroidBuild
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        type: string
+        required: true
+        default: 'Manual Debug Build'
+        description: 'Release Notes'
+  pull_request:
+    branches:
+      - develop
+  push:
+    branches:
+      - develop
+jobs:
+  build-prep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 18
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '18'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+            api-level: 30
+            build-tools: 30.0.3
+
+      - name: Create local.properties
+        run: echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
+
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run lint
+        run: ./gradlew ktlintFormat lint detekt ktlintCheck
+
+      - name: Run unit tests, jacoco
+        run: ./gradlew test jacocoTestReport
+#
+#      - name: SonarQube Scan
+#        run: ./gradlew sonar -Dsonar.host.url=https://e77d-103-240-204-84.ngrok-free.app -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.password=${{ secrets.SONAR_PASSWORD }} --stacktrace
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build with Gradle
+        run: ./gradlew assembleStagingDebug
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KotlinCICD.apk
+          path: app/build/outputs/apk/staging/debug/app-staging-debug.apk
+
+      - name: Upload Artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_STAGING_DEBUG_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          groups: Testers
+          file: app/build/outputs/apk/staging/debug/app-staging-debug.apk
+          releaseNotes: ${{ inputs.release_notes }}
+          releaseNotesFile: app/release-notes.txt
