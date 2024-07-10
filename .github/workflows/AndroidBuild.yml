@@ -54,18 +54,20 @@ jobs:
           name: KotlinCICD.apk
           path: app/build/outputs/apk/release/app-release-unsigned.apk
 
-#      - name: Upload and Distribute App
-#        uses: mastersam07/firebase-app-distribution-action@v0.1
-#        with:
-#          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-#          appId: ${{ secrets.FIREBASE_APP_ID }}
-#          path: app/build/outputs/apk/release/app-release-unsigned.apk
-
       - name: Upload Artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        uses: mastersam07/firebase-app-distribution-action@v0.1
         with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
           groups: Testers
-          file: app/build/outputs/apk/release/app-release-unsigned.apk
-          releaseNotes: ${{ inputs.release_notes }}
+          releaseNotes: "Distributed via GitHub Actions"
+#
+#      - name: Upload Artifact to Firebase App Distribution
+#        uses: wzieba/Firebase-Distribution-Github-Action@v1
+#        with:
+#          appId: ${{ secrets.FIREBASE_APP_ID }}
+#          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+#          groups: Testers
+#          file: app/build/outputs/apk/release/app-release-unsigned.apk
+#          releaseNotes: ${{ inputs.release_notes }}
