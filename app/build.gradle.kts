@@ -134,21 +134,20 @@ sonarqube {
         property("sonar.sources", "src/main/java")
         property("sonar.sourceEncoding", "UTF-8")
         property("sonar.tests", "src/test/java")
-//        property("sonar.test.inclusions", "**/*Test*/**")
-//        property(
-//            "sonar.exclusions",
-//            "**/*Test*/**," +
-//                "*.json," +
-//                "**/*test*/**," +
-//                "**/.gradle/**," +
-//                "**/R.class",
-//        )
+        property("sonar.test.inclusions", "**/*Test*/**")
+        property(
+            "sonar.exclusions",
+            "**/*Test*/**," +
+                "*.json," +
+                "**/*test*/**," +
+                "**/.gradle/**," +
+                "**/R.class",
+        )
 
         property("sonar.android.lint.reportPaths", "build/reports/lint-results.xml")
         property("sonar.java.coveragePlugin", "jacoco")
         property("sonar.junit.reportPaths", "build/test-results/testDebugUnitTest")
         property("sonar.jacoco.reportPaths", "**/jacoco/*.exec")
-//        property("sonar.jacoco.reportPaths", "build/jacoco/testDebugUnitTest.exec")
 //        property("sonar.jacoco.reportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
         property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
         property(
