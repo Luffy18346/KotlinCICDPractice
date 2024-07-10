@@ -8,10 +8,9 @@ on:
         default: 'Manual Debug Build'
         description: 'Release Notes'
   push:
-    branches:
-      - '**'
-      - '!master'
-      - '!develop'
+    branches-ignore:
+      - master
+      - develop
 
 jobs:
   setup-lint-build-deploy:

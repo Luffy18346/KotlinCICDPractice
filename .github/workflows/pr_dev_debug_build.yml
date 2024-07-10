@@ -8,10 +8,9 @@ on:
         default: 'Manual Debug Build'
         description: 'Release Notes'
   pull_request:
-    branches:
-      - '**'
-      - '!master'
-      - '!develop'
+    branches-ignore:
+      - master
+      - develop
 
 jobs:
   pr-setup-lint-build-deploy:
