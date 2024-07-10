@@ -1,0 +1,12 @@
+Android Build - 1.0 (1)
+BuildType: Release
+Branch: Main
+Server: NA
+
+Release Notes:
+1. Features
+    - Sample Features
+2. Improvements
+    - Sample Improvements
+3. Bugs
+    - Sample Bugs

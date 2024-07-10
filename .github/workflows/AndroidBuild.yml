@@ -61,12 +61,13 @@ jobs:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           file: app/build/outputs/apk/release/app-release-unsigned.apk
           groups: Testers
-#
-#      - name: Upload Artifact to Firebase App Distribution
-#        uses: wzieba/Firebase-Distribution-Github-Action@v1
-#        with:
-#          appId: ${{ secrets.FIREBASE_APP_ID }}
-#          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-#          groups: Testers
-#          file: app/build/outputs/apk/release/app-release-unsigned.apk
-#          releaseNotes: ${{ inputs.release_notes }}
+
+      - name: Upload Artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          groups: Testers
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
+          releaseNotes: ${{ inputs.release_notes }}
+          releaseNotesFile: app/release-notes.txt
