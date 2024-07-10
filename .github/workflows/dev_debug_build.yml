@@ -13,7 +13,7 @@ on:
       - '!master'
       - '!develop'
 jobs:
-  build-prep:
+  setup-lint-build-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,9 +35,6 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
 
-  lint-test:
-    runs-on: ubuntu-latest
-    steps:
       - name: Run lint
         run: ./gradlew ktlintFormat lint detekt ktlintCheck
 
@@ -47,15 +44,9 @@ jobs:
 #      - name: SonarQube Scan
 #        run: ./gradlew sonar -Dsonar.host.url=https://e77d-103-240-204-84.ngrok-free.app -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.password=${{ secrets.SONAR_PASSWORD }} --stacktrace
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
       - name: Build with Gradle
         run: ./gradlew assembleDevDebug
 
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:

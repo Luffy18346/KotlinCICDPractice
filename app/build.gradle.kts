@@ -29,6 +29,8 @@ android {
 
     buildTypes {
         getByName("debug") {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
             applicationIdSuffix = ".debug"
             isDebuggable = true
         }
@@ -42,6 +44,8 @@ android {
             )
         }
         create("beta") {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
             initWith(getByName("release"))
             isDebuggable = true
         }
@@ -138,7 +142,7 @@ sonarqube {
 
         property("sonar.android.lint.reportPaths", "build/reports/lint-results.xml")
         property("sonar.java.coveragePlugin", "jacoco")
-        property("sonar.junit.reportPaths", "build/test-results/testDebugUnitTest")
+        property("sonar.junit.reportPaths", "build/test-results/testProductionDebugUnitTest")
         property("sonar.jacoco.reportPaths", "**/jacoco/*.exec")
 //        property("sonar.jacoco.reportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
         property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
@@ -159,7 +163,7 @@ tasks.withType<Test> {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest")
+    dependsOn("testProductionDebugUnitTest")
 
     reports {
         xml.required.set(true)
@@ -167,21 +171,24 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         html.outputLocation.set(file("build/reports/jacoco"))
     }
 
-    val fileFilter = listOf(
-        "**/R.class",
-        "**/R$*.class",
-        "**/BuildConfig.*",
-        "**/Manifest*.*",
-        "**/*Test*.*",
-        "android/**/*.*",
-    )
+    val fileFilter =
+        listOf(
+            "**/R.class",
+            "**/R$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*Test*.*",
+            "android/**/*.*",
+        )
 
-    val debugTree = fileTree("${layout.buildDirectory}/intermediates/classes/debug") {
-        exclude(fileFilter)
-    }
-    val kotlinDebugTree = fileTree("${layout.buildDirectory}/tmp/kotlin-classes/debug") {
-        exclude(fileFilter)
-    }
+    val debugTree =
+        fileTree("${layout.buildDirectory}/intermediates/classes/debug") {
+            exclude(fileFilter)
+        }
+    val kotlinDebugTree =
+        fileTree("${layout.buildDirectory}/tmp/kotlin-classes/debug") {
+            exclude(fileFilter)
+        }
     val mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories.setFrom(files(mainSrc))
@@ -189,7 +196,7 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     executionData.setFrom(
         fileTree(layout.buildDirectory) {
             include(
-                "jacoco/testDebugUnitTest.exec",
+                "jacoco/testProductionDebugUnitTest.exec",
                 "outputs/code-coverage/connected/*coverage.ec",
             )
         },
