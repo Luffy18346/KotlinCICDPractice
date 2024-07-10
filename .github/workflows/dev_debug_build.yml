@@ -9,7 +9,7 @@ on:
         description: 'Release Notes'
   push:
     branches-ignore:
-      - master
+      - main
       - develop
 
 jobs:
