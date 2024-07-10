@@ -12,6 +12,11 @@ on:
       - '**'
       - '!master'
       - '!develop'
+  push:
+    branches:
+      - '**'
+      - '!master'
+      - '!develop'
 jobs:
   setup-lint-build-deploy:
     runs-on: ubuntu-latest
