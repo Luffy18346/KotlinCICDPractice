@@ -59,7 +59,7 @@ jobs:
         with:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
           appId: ${{ secrets.FIREBASE_APP_ID }}
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
           groups: Testers
           releaseNotes: "Distributed via GitHub Actions"
 #
