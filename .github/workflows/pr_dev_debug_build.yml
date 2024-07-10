@@ -9,13 +9,12 @@ on:
         description: 'Release Notes'
   pull_request:
     branches:
-      - main
-  push:
-    branches:
-      - main
+      - '**'
+      - '!master'
+      - '!develop'
 
 jobs:
-  setup-lint-build-deploy:
+  pr-setup-lint-build-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -47,20 +46,4 @@ jobs:
       #        run: ./gradlew sonar -Dsonar.host.url=https://e77d-103-240-204-84.ngrok-free.app -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.password=${{ secrets.SONAR_PASSWORD }} --stacktrace
 
       - name: Build with Gradle
-        run: ./gradlew assembleProductionRelease
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: KotlinCICD.apk
-          path: app/build/outputs/apk/production/release/app-production-release-unsigned.apk
-
-      - name: Upload Artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{ secrets.FIREBASE_PRODUCTION_RELEASE_APP_ID }}
-          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-          groups: Testers
-          file: app/build/outputs/apk/production/release/app-production-release-unsigned.apk
-          releaseNotes: ${{ inputs.release_notes }}
-          releaseNotesFile: app/release-notes.txt
+        run: ./gradlew assembleDevDebug
