@@ -55,13 +55,12 @@ jobs:
           path: app/build/outputs/apk/release/app-release-unsigned.apk
 
       - name: Upload Artifact to Firebase App Distribution
-        uses: mastersam07/firebase-app-distribution-action@v0.1
+        uses: mastersam07/firebase-app-distribution-action@v0.2
         with:
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
           appId: ${{ secrets.FIREBASE_APP_ID }}
           file: app/build/outputs/apk/release/app-release-unsigned.apk
           groups: Testers
-          releaseNotes: "Distributed via GitHub Actions"
 #
 #      - name: Upload Artifact to Firebase App Distribution
 #        uses: wzieba/Firebase-Distribution-Github-Action@v1
