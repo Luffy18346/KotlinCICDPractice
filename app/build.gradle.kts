@@ -6,6 +6,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("io.gitlab.arturbosch.detekt")
     id("org.sonarqube")
+    id("com.google.gms.google-services")
     id("jacoco")
 }
 
@@ -70,6 +71,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -148,7 +153,7 @@ sonarqube {
         property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
         property(
             "sonar.kotlin.ktlint.reportPaths",
-            "build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.xml"
+            "build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.xml",
         )
     }
 }
@@ -158,7 +163,7 @@ tasks.withType<Test> {
     finalizedBy(tasks.named("jacocoTestReport"))
     configure<JacocoTaskExtension> {
         isIncludeNoLocationClasses = true
-        excludes = arrayListOf("jdk.internal.*")       //This line
+        excludes = arrayListOf("jdk.internal.*")
     }
 }
 

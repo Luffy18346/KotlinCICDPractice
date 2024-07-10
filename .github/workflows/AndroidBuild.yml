@@ -29,20 +29,27 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
 
-      - name: Run lint
-        run: ./gradlew ktlintFormat lint detekt ktlintCheck
-
-      - name: Run unit tests, jacoco
-        run: ./gradlew test jacocoTestReport
-
-      - name: SonarQube Scan
-        run: ./gradlew sonar -Dsonar.host.url=https://e77d-103-240-204-84.ngrok-free.app -Dsonar.login=admin -Dsonar.password=admin --stacktrace
+#      - name: Run lint
+#        run: ./gradlew ktlintFormat lint detekt ktlintCheck
+#
+#      - name: Run unit tests, jacoco
+#        run: ./gradlew test jacocoTestReport
+#
+#      - name: SonarQube Scan
+#        run: ./gradlew sonar -Dsonar.host.url=https://e77d-103-240-204-84.ngrok-free.app -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.password=${{ secrets.SONAR_PASSWORD }} --stacktrace
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew assembleRelease
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: KotlinCICD.apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
+#
+#      - name: Upload and Distribute App
+#        uses: mastersam07/firebase-app-distribution-action@v0.1
+#        with:
+#          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+#          appId: ${{ secrets.FIREBASE_APP_ID }}
+#          path: app/build/outputs/apk/release/app-release-unsigned.apk

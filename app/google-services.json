@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "505317054648",
+    "project_id": "epam-ci-cd-f9685",
+    "storage_bucket": "epam-ci-cd-f9685.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505317054648:android:b5113bf20b3edff036bc4d",
+        "android_client_info": {
+          "package_name": "com.example.kotlincicdpractice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZQxJVAR85-ul6JKwJ7VRRQcR7gbkg7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
