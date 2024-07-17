@@ -42,8 +42,8 @@ jobs:
         run: ./gradlew test
 #        jacocoPrDevDebugTestReport
 
-      - name: SonarQube Scan
-        run: ./gradlew sonar -Dsonar.host.url=https://52a9-103-249-234-193.ngrok-free.app -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.password=${{ secrets.SONAR_PASSWORD }} --stacktrace
+#      - name: SonarQube Scan
+#        run: ./gradlew sonar -Dsonar.host.url=https://52a9-103-249-234-193.ngrok-free.app -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.password=${{ secrets.SONAR_PASSWORD }} --stacktrace
 
       - name: Build with Gradle
         run: ./gradlew assembleDevDebug
