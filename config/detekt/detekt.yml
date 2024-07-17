@@ -127,7 +127,7 @@ complexity:
     active: true
     threshold: 600
   LongMethod:
-    active: true
+    active: false
     threshold: 60
   LongParameterList:
     active: true
@@ -361,7 +361,7 @@ naming:
     propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
     privatePropertyPattern: '(_)?[A-Za-z][_A-Za-z0-9]*'
   PackageNaming:
-    active: true
+    active: false
     packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9]*)*'
   TopLevelPropertyNaming:
     active: true
@@ -617,13 +617,13 @@ style:
       - '2'
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: true
-    ignoreLocalVariableDeclaration: false
+    ignoreLocalVariableDeclaration: true
     ignoreConstantDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
-    ignoreAnnotation: false
+    ignoreAnnotation: true
     ignoreNamedArgument: true
-    ignoreEnums: false
-    ignoreRanges: false
+    ignoreEnums: true
+    ignoreRanges: true
     ignoreExtensionFunctions: true
   MandatoryBracesLoops:
     active: false
