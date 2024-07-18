@@ -11,7 +11,7 @@ plugins {
     id("com.google.devtools.ksp") version "2.0.0-1.0.22" apply false
     id("com.google.dagger.hilt.android") version "2.48" apply false
 
-//    id("jacoco")
+    id("jacoco")
 }
 
 apply(from = "team-props/git-hooks.gradle")

@@ -58,16 +58,16 @@ class NotesScreenTest {
         composeRule.onNodeWithTag(TestTags.ORDER_SECTION).assertIsDisplayed()
     }
 
-//    @Test
-//    fun clickToggleOrderSection2Times_isNotVisible() {
-//        // To get string resources via context in AndroidTest directory only.
-// //        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-//        composeRule.onNodeWithTag(TestTags.ORDER_SECTION).assertIsNotDisplayed()
-//        composeRule.onNodeWithContentDescription("Sort").performClick()
-//        composeRule.onNodeWithTag(TestTags.ORDER_SECTION).assertIsDisplayed()
-//        composeRule.onNodeWithContentDescription("Title").performClick()
-//        composeRule.onNodeWithContentDescription("Ascending").performClick()
-//        composeRule.onNodeWithContentDescription("Sort").performClick()
-//        composeRule.onNodeWithTag(TestTags.ORDER_SECTION).assertIsNotDisplayed()
-//    }
+    @Test
+    fun clickToggleOrderSection2Times_isNotVisible() {
+        // To get string resources via context in AndroidTest directory only.
+        //        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        composeRule.onNodeWithTag(TestTags.ORDER_SECTION).assertIsNotDisplayed()
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+        composeRule.onNodeWithTag(TestTags.ORDER_SECTION).assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Title").performClick()
+        composeRule.onNodeWithContentDescription("Ascending").performClick()
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+        composeRule.onNodeWithTag(TestTags.ORDER_SECTION).assertIsNotDisplayed()
+    }
 }

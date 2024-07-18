@@ -1,4 +1,5 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+import java.util.Locale
 
 plugins {
     alias(libs.plugins.android.application)
@@ -10,7 +11,7 @@ plugins {
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.dagger.hilt.android")
-//    id("jacoco")
+    id("jacoco")
 }
 
 android {
@@ -90,6 +91,162 @@ android {
     testOptions.unitTests {
         isReturnDefaultValues = true
     }
+}
+
+tasks.withType<Test> {
+    useJUnit()
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = arrayListOf("jdk.internal.*")
+    }
+}
+
+android {
+    applicationVariants.all(
+        closureOf<com.android.build.gradle.internal.api.BaseVariantImpl> {
+            // Extract variant name and capitalize the first letter
+            val variant =
+                this@closureOf.name.replaceFirstChar {
+                    if (it.isLowerCase()) {
+                        it.titlecase(
+                            Locale.getDefault(),
+                        )
+                    } else {
+                        it.toString()
+                    }
+                }
+
+            // Define task names for unit tests and Android tests
+            val unitTests = "test${variant}UnitTest"
+            val androidTests = "connected${variant}AndroidTest"
+
+            tasks.register<JacocoReport>("jacoco${variant}TestReport") {
+                if (variant.contains("debug", true)) {
+                    dependsOn(listOf(unitTests, androidTests))
+                } else {
+                    dependsOn(listOf(unitTests))
+                }
+
+                // Set task grouping and description
+                group = "Reporting"
+                description =
+                    "Execute UI and unit tests, generate and combine Jacoco coverage report"
+
+                reports {
+                    xml.required.set(true)
+                    html.required.set(true)
+                    csv.required.set(false)
+                    html.outputLocation.set(file("build/reports/jacoco"))
+                }
+
+                val fileFilter =
+                    listOf(
+                        "**/R.class",
+                        "**/R$*.class",
+                        "**/BuildConfig.*",
+                        "**/Manifest*.*",
+                        "**/*Test*.*",
+                        "android/**/*.*",
+                    )
+
+                // Set source directories to the main source directory
+//                sourceDirectories.setFrom(layout.projectDirectory.dir("src/main"))
+//                // Set class directories to compiled Java and Kotlin classes, excluding specified exclusions
+//                classDirectories.setFrom(
+//                    files(
+//                        fileTree(layout.buildDirectory.dir("intermediates/javac/")) {
+//                            exclude(fileFilter)
+//                        },
+//                        fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/")) {
+//                            exclude(fileFilter)
+//                        },
+//                    ),
+//                )
+//
+//            val debugTree =
+//                fileTree("${layout.buildDirectory}/intermediates/classes/debug") {
+//                    exclude(fileFilter)
+//                }
+//            val kotlinDebugTree =
+//                fileTree("${layout.buildDirectory}/tmp/kotlin-classes/debug") {
+//                    exclude(fileFilter)
+//                }
+//            val mainSrc = "${project.projectDir}/src/main/java"
+//            sourceDirectories.setFrom(files(mainSrc))
+//            classDirectories.setFrom(files(debugTree, kotlinDebugTree))
+
+                // Set source directories to the main source directory
+                sourceDirectories.setFrom(layout.projectDirectory.dir("src/main"))
+
+                // Set class directories to compiled Java and Kotlin classes, excluding specified exclusions
+                val debugTree =
+                    fileTree("${layout.buildDirectory}/intermediates/classes/$variant") {
+                        exclude(fileFilter)
+                    }
+                val kotlinDebugTree =
+                    fileTree("${layout.buildDirectory}/tmp/kotlin-classes/$variant") {
+                        exclude(fileFilter)
+                    }
+                classDirectories.setFrom(files(debugTree, kotlinDebugTree))
+
+                executionData.setFrom(
+                    files(
+                        fileTree(layout.buildDirectory) { include(listOf("**/*.exec", "**/*.ec")) },
+                    ),
+                )
+            }
+
+            tasks.register<JacocoReport>("jacocoPr${variant}TestReport") {
+                if (variant.contains("debug", true)) {
+                    dependsOn(listOf(unitTests, androidTests))
+                } else {
+                    dependsOn(listOf(unitTests))
+                }
+
+                // Set task grouping and description
+                group = "Reporting"
+                description =
+                    "Execute UI and unit tests, generate and combine Jacoco coverage report"
+
+                reports {
+                    xml.required.set(true)
+                    html.required.set(true)
+                    csv.required.set(false)
+                    html.outputLocation.set(file("build/reports/jacoco"))
+                }
+
+                val fileFilter =
+                    listOf(
+                        "**/R.class",
+                        "**/R$*.class",
+                        "**/BuildConfig.*",
+                        "**/Manifest*.*",
+                        "**/*Test*.*",
+                        "android/**/*.*",
+                    )
+
+                // Set source directories to the main source directory
+                sourceDirectories.setFrom(layout.projectDirectory.dir("src/main"))
+
+                // Set class directories to compiled Java and Kotlin classes, excluding specified exclusions
+                val debugTree =
+                    fileTree("${layout.buildDirectory}/intermediates/javac/$variant") {
+                        exclude(fileFilter)
+                    }
+                val kotlinDebugTree =
+                    fileTree("${layout.buildDirectory}/tmp/kotlin-classes/$variant") {
+                        exclude(fileFilter)
+                    }
+                classDirectories.setFrom(files(debugTree, kotlinDebugTree))
+
+                executionData.setFrom(
+                    files(
+                        fileTree(layout.buildDirectory) { include(listOf("**/*.exec", "**/*.ec")) },
+                    ),
+                )
+            }
+        },
+    )
 }
 
 dependencies {
@@ -182,15 +339,38 @@ detekt {
 // Apply the git-hooks.gradle file
 apply(from = "$rootDir/team-props/git-hooks.gradle")
 
-// Ensure clean and build tasks depend on installGitHooks
+// Ensure clean, assemble and build tasks depend on installGitHooks
+gradle.taskGraph.whenReady(
+    closureOf<TaskExecutionGraph> {
+        this@closureOf.allTasks.forEach { task ->
+            if (task.name.startsWith("pre") && task.name.endsWith("Build")) {
+                android.applicationVariants.all { variant ->
+                    val variantName =
+                        variant.name.replaceFirstChar {
+                            if (it.isLowerCase()) {
+                                it.titlecase(
+                                    Locale.getDefault(),
+                                )
+                            } else {
+                                it.toString()
+                            }
+                        }
+
+                    if (task.name == "pre${variantName}Build") {
+                        task.doFirst {
+                            val variantFile = File("${project.rootDir}/build-variant.txt")
+                            variantFile.writeText(variantName)
+                        }
+                    }
+                    true
+                }
+            }
+        }
+    },
+)
+
 afterEvaluate {
     tasks.named("clean") {
-        dependsOn("makeGradlewExecutable", "installGitHooks")
-    }
-    tasks.named("build") {
-        dependsOn("makeGradlewExecutable", "installGitHooks")
-    }
-    tasks.named("assemble") {
         dependsOn("makeGradlewExecutable", "installGitHooks")
     }
 }
@@ -212,9 +392,10 @@ sonarqube {
         )
 
         property("sonar.android.lint.reportPaths", "build/reports/lint-results-devDebug.xml")
-//        property("sonar.java.coveragePlugin", "jacoco")
-        property("sonar.junit.reportPaths", "build/test-results/testProductionDebugUnitTest")
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.junit.reportPaths", "build/test-results/testDevDebugUnitTest")
 //        property("sonar.jacoco.reportPaths", "**/jacoco/*.exec")
+//        property("sonar.jacoco.reportPaths", "build/jacoco/testDebugUnitTest.exec")
 //        property("sonar.jacoco.reportPaths", "build/reports/jacoco/test/jacoco${variant}TestReport.xml")
         property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
         property(
@@ -224,13 +405,9 @@ sonarqube {
     }
 }
 
-abstract class WriteVariantTask : DefaultTask() {
-    @Input
-    lateinit var variantName: String
-
-    @TaskAction
-    fun write() {
-        val variantFile = File("${project.rootDir}/build-variant.txt")
-        variantFile.writeText(variantName)
-    }
-}
+// Task 'createDebugCoverageReport' is ambiguous in root project 'KotlinCICDPractice' and its subprojects.
+// Candidates are: 'createDevDebugAndroidTestCoverageReport', 'createDevDebugCoverageReport',
+// 'createDevDebugUnitTestCoverageReport', 'createProductionDebugAndroidTestCoverageReport',
+// 'createProductionDebugCoverageReport', 'createProductionDebugUnitTestCoverageReport',
+// 'createStagingDebugAndroidTestCoverageReport', 'createStagingDebugCoverageReport',
+// 'createStagingDebugUnitTestCoverageReport'.
