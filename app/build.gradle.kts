@@ -343,7 +343,7 @@ apply(from = "$rootDir/team-props/git-hooks.gradle")
 gradle.taskGraph.whenReady(
     closureOf<TaskExecutionGraph> {
         this@closureOf.allTasks.forEach { task ->
-            if (task.name.startsWith("pre") && task.name.endsWith("Build")) {
+            if (task.name.startsWith("assemble") || task.name.startsWith("build")) {
                 android.applicationVariants.all { variant ->
                     val variantName =
                         variant.name.replaceFirstChar {
@@ -356,7 +356,7 @@ gradle.taskGraph.whenReady(
                             }
                         }
 
-                    if (task.name == "pre${variantName}Build") {
+                    if (task.name == "assemble$variantName") {
                         task.doFirst {
                             val variantFile = File("${project.rootDir}/build-variant.txt")
                             variantFile.writeText(variantName)
