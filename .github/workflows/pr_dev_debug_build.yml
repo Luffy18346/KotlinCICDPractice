@@ -39,8 +39,7 @@ jobs:
         run: ./gradlew ktlintFormat lint detekt ktlintCheck
 
       - name: Run unit tests, jacoco
-        run: ./gradlew test
-#        jacocoPrDevDebugTestReport
+        run: ./gradlew test createDevDebugUnitTestCoverageReport
 
 #      - name: SonarQube Scan
 #        run: ./gradlew sonar -Dsonar.host.url=https://52a9-103-249-234-193.ngrok-free.app -Dsonar.login=${{ secrets.SONAR_LOGIN }} -Dsonar.password=${{ secrets.SONAR_PASSWORD }} --stacktrace

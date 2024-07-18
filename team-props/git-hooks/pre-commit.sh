@@ -14,12 +14,12 @@ status=$?
 if [ "$status" = 0 ] ; then
     echo "Static analysis found no problems."
 
-#    VARIANT_FILE="./build-variant.txt"
-#    if [ -f "$VARIANT_FILE" ]; then
-#        BUILD_VARIANT=$(cat $VARIANT_FILE)
-#        echo "Build Variant: $BUILD_VARIANT"
+    VARIANT_FILE="./build-variant.txt"
+    if [ -f "$VARIANT_FILE" ]; then
+        BUILD_VARIANT=$(cat $VARIANT_FILE)
+        echo "Build Variant: $BUILD_VARIANT"
 
-        test_command="./gradlew test"
+        test_command="./gradlew test create${BUILD_VARIANT}CoverageReport --continue"
 #        test_command -  jacoco${BUILD_VARIANT}TestReport connectedAndroidTest // we need emulator running for these tests
         $test_command
 
@@ -30,10 +30,10 @@ if [ "$status" = 0 ] ; then
         fi
         echo "Tests passed."
         exit 0
-#    else
-#        echo "Variant file not found! Make sure to run the build task first."
-#        exit 1
-#    fi
+    else
+        echo "Variant file not found! Make sure to run the build task first."
+        exit 1
+    fi
 else
     echo 1>&2 "Static analysis found violations it could not fix."
     echo 1>&2 "There are code formatting or code quality issues."

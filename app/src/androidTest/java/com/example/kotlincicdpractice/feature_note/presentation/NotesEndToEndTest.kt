@@ -1,13 +1,22 @@
 package com.example.kotlincicdpractice.feature_note.presentation
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -109,67 +118,72 @@ class NotesEndToEndTest {
         composeRule.onNodeWithText("2Test-content").assertIsDisplayed()
     }
 
-//    @Test
-//    fun saveNewNotes_orderByTitleDescending() {
-//        for (i in 1..3) {
-//            // Click on FAB to get to add note screen
-//            composeRule.onNodeWithContentDescription("Add").performClick()
-//
-//            // Enter texts in title and content text fields
-//            composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput(i.toString())
-//            composeRule.onNodeWithTag(TestTags.CONTENT_TEXT_FIELD).performTextInput(i.toString())
-//            // Save the new note
-//            composeRule.onNodeWithContentDescription("Save").performClick()
-//        }
-//
-//        composeRule.onNodeWithText("1").assertIsDisplayed()
-//        composeRule.onNodeWithText("2").assertIsDisplayed()
-//        composeRule.onNodeWithText("3").assertIsDisplayed()
-//
-//        composeRule.onNodeWithContentDescription("Sort").performClick()
-//        composeRule.onNodeWithContentDescription("Title").performClick()
-//        composeRule.onNodeWithContentDescription("Descending").performClick()
-//
-//        composeRule.onAllNodesWithTag(TestTags.NOTE_LIST_ITEM)[0].assertTextContains("3")
-//        composeRule.onAllNodesWithTag(TestTags.NOTE_LIST_ITEM)[1].assertTextContains("2")
-//        composeRule.onAllNodesWithTag(TestTags.NOTE_LIST_ITEM)[2].assertTextContains("1")
-//    }
-//
-//    @Test
-//    fun saveNewNotes_deleteAny_undo_isVisible() {
-//        for (i in 1..3) {
-//            // Click on FAB to get to add note screen
-//            composeRule.onNodeWithContentDescription("Add").performClick()
-//
-//            // Enter texts in title and content text fields
-//            composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput(i.toString())
-//            composeRule.onNodeWithTag(TestTags.CONTENT_TEXT_FIELD).performTextInput(i.toString())
-//            // Save the new note
-//            composeRule.onNodeWithContentDescription("Save").performClick()
-//        }
-//
-//        composeRule.onNodeWithText("1").assertIsDisplayed()
-//        composeRule.onNodeWithText("2").assertIsDisplayed()
-//        composeRule.onNodeWithText("3").assertIsDisplayed()
-//
-//        getItem(TestTags.NOTE_LIST, "3").onChildren().filterToOne(hasAnyDescendant(
-//            hasContentDescription("Delete")
-//        )).performClick()
-//
-//        composeRule.onNodeWithText("3").assertIsNotDisplayed()
-//
-//        composeRule.onNodeWithText("Note deleted").assertIsDisplayed()
-//        composeRule.onNodeWithText("Undo").assertIsDisplayed()
-//
-//        composeRule.onNodeWithText("Undo").performClick()
-//
-//        composeRule.onNodeWithText("3").assertIsDisplayed()
-//    }
-//
-//    fun getItem(tag: String, name: String): SemanticsNodeInteraction {
-//        return composeRule.onNodeWithTag(tag, useUnmergedTree = true)
-//            .performScrollToNode(hasAnyDescendant(hasText(name)))
-//            .onChildren()
-//            .filterToOne(hasAnyDescendant(hasText(name)))
-//    }
+    @Test
+    fun saveNewNotes_orderByTitleDescending() {
+        for (i in 1..3) {
+            // Click on FAB to get to add note screen
+            composeRule.onNodeWithContentDescription("Add").performClick()
+
+            // Enter texts in title and content text fields
+            composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput(i.toString())
+            composeRule.onNodeWithTag(TestTags.CONTENT_TEXT_FIELD).performTextInput(i.toString())
+            // Save the new note
+            composeRule.onNodeWithContentDescription("Save").performClick()
+        }
+
+        composeRule.onNodeWithText("1").assertIsDisplayed()
+        composeRule.onNodeWithText("2").assertIsDisplayed()
+        composeRule.onNodeWithText("3").assertIsDisplayed()
+
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+        composeRule.onNodeWithContentDescription("Title").performClick()
+        composeRule.onNodeWithContentDescription("Descending").performClick()
+
+        composeRule.onAllNodesWithTag(TestTags.NOTE_LIST_ITEM)[0].assertTextContains("3")
+        composeRule.onAllNodesWithTag(TestTags.NOTE_LIST_ITEM)[1].assertTextContains("2")
+        composeRule.onAllNodesWithTag(TestTags.NOTE_LIST_ITEM)[2].assertTextContains("1")
+    }
+
+    @Test
+    fun saveNewNotes_deleteAny_undo_isVisible() {
+        for (i in 1..3) {
+            // Click on FAB to get to add note screen
+            composeRule.onNodeWithContentDescription("Add").performClick()
+
+            // Enter texts in title and content text fields
+            composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput(i.toString())
+            composeRule.onNodeWithTag(TestTags.CONTENT_TEXT_FIELD).performTextInput(i.toString())
+            // Save the new note
+            composeRule.onNodeWithContentDescription("Save").performClick()
+        }
+
+        composeRule.onNodeWithText("1").assertIsDisplayed()
+        composeRule.onNodeWithText("2").assertIsDisplayed()
+        composeRule.onNodeWithText("3").assertIsDisplayed()
+
+        getItem(TestTags.NOTE_LIST, "3").onChildren().filterToOne(
+            hasAnyDescendant(
+                hasContentDescription("Delete"),
+            ),
+        ).performClick()
+
+        composeRule.onNodeWithText("3").assertIsNotDisplayed()
+
+        composeRule.onNodeWithText("Note deleted").assertIsDisplayed()
+        composeRule.onNodeWithText("Undo").assertIsDisplayed()
+
+        composeRule.onNodeWithText("Undo").performClick()
+
+        composeRule.onNodeWithText("3").assertIsDisplayed()
+    }
+
+    private fun getItem(
+        tag: String,
+        name: String,
+    ): SemanticsNodeInteraction {
+        return composeRule.onNodeWithTag(tag, useUnmergedTree = true)
+            .performScrollToNode(hasAnyDescendant(hasText(name)))
+            .onChildren()
+            .filterToOne(hasAnyDescendant(hasText(name)))
+    }
 }
